@@ -1,0 +1,12 @@
+{
+    "name": "@kokiri/key",
+    "version": "1.0.0",
+    "license": "MIT",
+    "exports": {
+        ".": "./mod.ts"
+    },
+    "fmt": {
+        "indentWidth": 4,
+        "semiColons": false
+    }
+}
