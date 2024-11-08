@@ -1,3 +1,6 @@
+// Copyright KyoriPowered 2017-2024. MIT license.
+// Ported mostly from https://github.com/KyoriPowered/adventure/tree/774b52564354666aab2134de0e7e2ef61b57da89/key
+
 /**
  * A reference composed of a namespace and a path.
  *
@@ -21,7 +24,7 @@
  * ```ts
  * import { Key } from "@forest/key";
  *
- * Key.key("kokiri", "forest").asString() // "kokiri:forest"
+ * Key.key("kokiri", "forest").string // "kokiri:forest"
  * ```
  *
  * @module
