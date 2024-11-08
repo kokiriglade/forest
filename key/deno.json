@@ -1,6 +1,6 @@
 {
     "name": "@forest/key",
-    "version": "1.0.0",
+    "version": "1.0.0a",
     "exports": {
         ".": "./mod.ts"
     }
