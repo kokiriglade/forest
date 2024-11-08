@@ -6,6 +6,7 @@
         "noImplicitOverride": true,
         "noUncheckedIndexedAccess": true
     },
+    "importMap": "./import_map.json",
     "exclude": [
         ".git"
     ],
@@ -21,6 +22,7 @@
         }
     },
     "workspace": [
-        "./key"
+        "./key",
+        "./registry"
     ]
 }

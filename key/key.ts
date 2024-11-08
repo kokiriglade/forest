@@ -36,7 +36,7 @@ export class Key {
             const [namespace, val] = string.split(Key.DEFAULT_SEPARATOR);
             if (!namespace || !val) {
                 throw new Error(
-                    `Invalid format. Expected "namespace${Key.DEFAULT_SEPARATOR}value"`
+                    `Invalid format. Expected "namespace${Key.DEFAULT_SEPARATOR}value"`,
                 );
             }
             Key.assertPattern(namespace, Key.NAMESPACE_PATTERN, "namespace");
@@ -60,7 +60,7 @@ export class Key {
     private static assertPattern(
         value: string,
         pattern: RegExp,
-        fieldName: string
+        fieldName: string,
     ): asserts value is string {
         if (!pattern.test(value)) {
             throw new Error(`${fieldName} must match pattern ${pattern}`);
