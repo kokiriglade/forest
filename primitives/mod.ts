@@ -27,7 +27,6 @@
  *
  * @module
  */
-
 export * from "./int8.ts";
 export * from "./int16.ts";
 export * from "./int32.ts";
