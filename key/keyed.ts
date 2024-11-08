@@ -5,5 +5,5 @@ import type { Key } from "./key.ts";
  */
 export interface Keyed {
     /** Gets the key */
-    key(): Key;
+    readonly key: Key;
 }

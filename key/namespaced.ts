@@ -3,5 +3,5 @@
  */
 export interface Namespaced {
     /** Gets the namespace */
-    namespace(): string;
+    readonly namespace: string;
 }

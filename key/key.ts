@@ -1,7 +1,9 @@
+import type { Keyed, Namespaced } from "./mod.ts";
+
 /**
  * Class representing a Key with a namespace and value separated by a default separator
  */
-export class Key {
+export class Key implements Keyed, Namespaced {
     /** Default separator between namespace and value */
     public static DEFAULT_SEPARATOR: string = ":";
 
@@ -11,7 +13,14 @@ export class Key {
     /** Pattern for validating the value format */
     private static VALUE_PATTERN: RegExp = new RegExp("^[a-z0-9_\\-./]+$");
 
-    private constructor(private _namespace: string, private _value: string) {}
+    private constructor(
+        private readonly _namespace: string,
+        private readonly _value: string,
+    ) {}
+
+    get key(): Key {
+        return this;
+    }
 
     /**
      * Creates a Key instance from a single formatted string "namespace:value"
@@ -67,10 +76,6 @@ export class Key {
         }
     }
 
-    /**
-     * Gets the namespace of the Key
-     * @returns The namespace as a string
-     */
     get namespace(): string {
         return this._namespace;
     }
