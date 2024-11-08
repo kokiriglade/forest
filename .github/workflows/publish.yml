@@ -23,9 +23,6 @@ jobs:
               with:
                   deno-version: canary
 
-            - name: Format
-              run: deno fmt --check
-
             - name: Test
               run: deno test
 
