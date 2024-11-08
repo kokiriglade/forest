@@ -19,9 +19,9 @@
  *
  * @example
  * ```ts
- * import { Key } from "@kokiri/key";
+ * import { Key } from "@forest/key";
  *
- * Key.key("kokiriglade", "my_thing").asString() // "kokiriglade:my_thing"
+ * Key.key("kokiri", "forest").asString() // "kokiri:forest"
  * ```
  *
  * @module
