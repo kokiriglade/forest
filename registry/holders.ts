@@ -52,6 +52,7 @@ export class Lazy<K, V> implements Holder<K, V> {
 
     /**
      * Binds a value to the lazy holder if it has not been assigned yet
+     *
      * @param value - The value to bind
      * @returns `null` if binding is successful, or the existing value if already bound
      */

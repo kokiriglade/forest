@@ -24,6 +24,7 @@ export class Key implements Keyed, Namespaced {
 
     /**
      * Creates a Key instance from a single formatted string "namespace:value"
+     *
      * @param string - The string in the format "namespace:value"
      * @returns A new Key instance
      * @throws {Error} Throws an error if the format is invalid or patterns do not match
@@ -32,6 +33,7 @@ export class Key implements Keyed, Namespaced {
 
     /**
      * Creates a Key instance from separate namespace and value strings
+     *
      * @param namespace - The namespace of the Key, must match NAMESPACE_PATTERN
      * @param value - The value of the Key, must match VALUE_PATTERN
      * @returns A new Key instance
@@ -61,6 +63,7 @@ export class Key implements Keyed, Namespaced {
 
     /**
      * Asserts that a value matches a specified pattern
+     *
      * @param value - The value to check
      * @param pattern - The regular expression pattern the value should match
      * @param fieldName - The name of the field being checked, used in the error message
@@ -82,6 +85,7 @@ export class Key implements Keyed, Namespaced {
 
     /**
      * Gets the value of the Key
+     *
      * @returns The value as a string
      */
     get value(): string {
@@ -90,6 +94,7 @@ export class Key implements Keyed, Namespaced {
 
     /**
      * Returns the Key as a single string with namespace and value separated by the default separator
+     *
      * @returns A string in the format "namespace:value"
      */
     get string(): string {

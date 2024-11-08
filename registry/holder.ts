@@ -9,12 +9,14 @@ import type { Option } from "@gnome/monads";
 export interface Holder<K, V> {
     /**
      * Gets the key
+     *
      * @returns the key
      */
     readonly key: K;
 
     /**
      * Checks if this holder has a value associated
+     *
      * @returns `true` if this holder has a value associated, `false` otherwise
      */
     readonly bound: boolean;
@@ -27,12 +29,14 @@ export interface Holder<K, V> {
 
     /**
      * Gets the value wrapped in an `Option`
+     *
      * @returns the value wrapped in an `Option`
      */
     valueOptionally(): Option<V>;
 
     /**
      * Gets the value, or throws an error if no value is bound
+     *
      * @returns the value
      * @throws {Error} if no value is bound
      */
@@ -40,6 +44,7 @@ export interface Holder<K, V> {
 
     /**
      * Gets the type
+     *
      * @returns the type
      */
     readonly type: HolderType;
