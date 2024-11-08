@@ -1,8 +1,10 @@
-name: Publish
+name: CI
 
 on:
-    release:
-        types: [published]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
     workflow_dispatch:
 
 jobs:
@@ -28,6 +30,3 @@ jobs:
 
             - name: Test
               run: deno test
-
-            - name: Publish to JSR
-              run: deno publish
