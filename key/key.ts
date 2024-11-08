@@ -87,7 +87,7 @@ export class Key {
      * Returns the Key as a single string with namespace and value separated by the default separator
      * @returns A string in the format "namespace:value"
      */
-    public asString(): string {
+    get string(): string {
         return `${this.namespace}${Key.DEFAULT_SEPARATOR}${this.value}`;
     }
 }
