@@ -26,5 +26,6 @@
  *
  * @module
  */
-export * from "./key.ts"
-export * from "./namespaced.ts"
+export * from "./key.ts";
+export * from "./namespaced.ts";
+export * from "./keyed.ts";
