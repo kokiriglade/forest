@@ -3,13 +3,13 @@
  */
 export class Key {
     /** Default separator between namespace and value */
-    public static DEFAULT_SEPARATOR: string = ":"
+    public static DEFAULT_SEPARATOR: string = ":";
 
     /** Pattern for validating the namespace format */
-    private static NAMESPACE_PATTERN: RegExp = new RegExp("^[a-z0-9_\\-.]+$")
+    private static NAMESPACE_PATTERN: RegExp = new RegExp("^[a-z0-9_\\-.]+$");
 
     /** Pattern for validating the value format */
-    private static VALUE_PATTERN: RegExp = new RegExp("^[a-z0-9_\\-./]+$")
+    private static VALUE_PATTERN: RegExp = new RegExp("^[a-z0-9_\\-./]+$");
 
     private constructor(private _namespace: string, private _value: string) {}
 
@@ -19,7 +19,7 @@ export class Key {
      * @returns A new Key instance
      * @throws {Error} Throws an error if the format is invalid or patterns do not match
      */
-    public static key(string: string): Key
+    public static key(string: string): Key;
 
     /**
      * Creates a Key instance from separate namespace and value strings
@@ -28,25 +28,25 @@ export class Key {
      * @returns A new Key instance
      * @throws {Error} Throws an error if the patterns do not match
      */
-    public static key(namespace: string, value: string): Key
+    public static key(namespace: string, value: string): Key;
 
     public static key(string: string, value?: string): Key {
         if (value === undefined) {
             // Parse "namespace:value" format
-            const [namespace, val] = string.split(Key.DEFAULT_SEPARATOR)
+            const [namespace, val] = string.split(Key.DEFAULT_SEPARATOR);
             if (!namespace || !val) {
                 throw new Error(
-                    `Invalid format. Expected "namespace${Key.DEFAULT_SEPARATOR}value"`,
-                )
+                    `Invalid format. Expected "namespace${Key.DEFAULT_SEPARATOR}value"`
+                );
             }
-            Key.assertPattern(namespace, Key.NAMESPACE_PATTERN, "namespace")
-            Key.assertPattern(val, Key.VALUE_PATTERN, "value")
-            return new Key(namespace, val)
+            Key.assertPattern(namespace, Key.NAMESPACE_PATTERN, "namespace");
+            Key.assertPattern(val, Key.VALUE_PATTERN, "value");
+            return new Key(namespace, val);
         } else {
             // Use separate namespace and value
-            Key.assertPattern(string, Key.NAMESPACE_PATTERN, "namespace")
-            Key.assertPattern(value, Key.VALUE_PATTERN, "value")
-            return new Key(string, value)
+            Key.assertPattern(string, Key.NAMESPACE_PATTERN, "namespace");
+            Key.assertPattern(value, Key.VALUE_PATTERN, "value");
+            return new Key(string, value);
         }
     }
 
@@ -60,10 +60,10 @@ export class Key {
     private static assertPattern(
         value: string,
         pattern: RegExp,
-        fieldName: string,
+        fieldName: string
     ): asserts value is string {
         if (!pattern.test(value)) {
-            throw new Error(`${fieldName} must match pattern ${pattern}`)
+            throw new Error(`${fieldName} must match pattern ${pattern}`);
         }
     }
 
@@ -72,7 +72,7 @@ export class Key {
      * @returns The namespace as a string
      */
     get namespace(): string {
-        return this._namespace
+        return this._namespace;
     }
 
     /**
@@ -80,7 +80,7 @@ export class Key {
      * @returns The value as a string
      */
     get value(): string {
-        return this._value
+        return this._value;
     }
 
     /**
@@ -88,6 +88,6 @@ export class Key {
      * @returns A string in the format "namespace:value"
      */
     public asString(): string {
-        return `${this.namespace}${Key.DEFAULT_SEPARATOR}${this.value}`
+        return `${this.namespace}${Key.DEFAULT_SEPARATOR}${this.value}`;
     }
 }
