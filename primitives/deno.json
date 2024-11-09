@@ -1,6 +1,6 @@
 {
     "name": "@forest/primitives",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "exports": {
         ".": "./mod.ts"
     }
