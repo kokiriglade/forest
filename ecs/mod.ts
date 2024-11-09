@@ -4,8 +4,7 @@
  *
  * @example
  * ```typescript
- * import { Component, type Entity, Scheduler, System, World } from "@forest/ecs";
- * import type { TableResult } from "./table_result.ts";
+ * import { Component, type Entity, Scheduler, System, World, type TableResult } from "@forest/ecs";
  * import { assertEquals } from "@std/assert";
  *
  * // a position component
@@ -60,3 +59,6 @@ export * from "./component.ts";
 export * from "./system.ts";
 export * from "./scheduler.ts";
 export * from "./world.ts";
+export * from "./table_result.ts";
+export * from "./identifiable.ts";
+export * from "./table.ts";
