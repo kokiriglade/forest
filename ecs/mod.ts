@@ -52,6 +52,8 @@
  *     assertEquals(position.unwrap().y, 1);
  * }
  * ```
+ *
+ * @module
  */
 export * from "./entity.ts";
 export * from "./component.ts";
