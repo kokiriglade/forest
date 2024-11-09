@@ -6,30 +6,61 @@ import { Table } from "./table.ts";
 import { assertExists } from "@std/assert";
 
 /**
- * Responsible for managing entities and systems
+ * Manages entities, systems, and their lifecycle
  *
- * @template I type used to identify components and schedulers in the world
+ * @template I Type identifier used to identify components and schedulers in the world
  */
 export class World<I> {
+    /**
+     * Internal table managing component data for entities
+     */
     private _table: Table<I> = new Table();
 
+    /**
+     * Collection of systems and their associated schedulers
+     */
     private _systems: {
         scheduler: Scheduler<I>;
         system: System<I, Component<I>[]>;
     }[] = [];
 
+    /**
+     * ID of the most recently added entity Used to auto-generate entity IDs
+     */
     private _mostRecentEntityId: bigint = 0n;
 
+    /**
+     * The scheduler currently in control of the world's execution flow
+     */
     private _currentlyRunningScheduler: Scheduler<I> | null = null;
 
+    /**
+     * Returns the entity-component table which stores component data for all entities
+     *
+     * @return {Readonly<Table<I>>} Read-only view of the component table
+     */
     public get table(): Readonly<Table<I>> {
         return Object.freeze(this._table);
     }
 
+    /**
+     * Returns the scheduler currently running or `None` if none is active
+     *
+     * @return {Option<Scheduler<I>>} Option-wrapped scheduler currently in control
+     */
     public get currentScheduler(): Option<Scheduler<I>> {
         return from(this._currentlyRunningScheduler);
     }
 
+    /**
+     * Adds a new entity with the specified components to the entity table If `id` is null, a new ID is generated
+     *
+     * Throws an error if an entity with the specified ID already exists
+     *
+     * @param {bigint | null} id Entity ID, or `null` to auto-generate one
+     * @param {Component<I>[]} components Components to associate with the entity
+     * @return {this} Returns the `World` instance for chaining
+     */
     public addEntity(id: bigint | null, ...components: Component<I>[]): this {
         if (id === null) {
             id = this._mostRecentEntityId++;
@@ -46,6 +77,15 @@ export class World<I> {
         return this;
     }
 
+    /**
+     * Adds a new system with an associated scheduler to the world
+     *
+     * Throws an error if the scheduler or system is null
+     *
+     * @param {Scheduler<I>} scheduler Scheduler controlling when the system executes
+     * @param {new (table: Table<I>) => System<I, T>} system System class to manage
+     * @return {this} Returns the `World` instance for chaining
+     */
     public addSystem<T extends Component<I>[]>(
         scheduler: Scheduler<I>,
         system: new (table: Table<I>) => System<I, T>,
@@ -63,6 +103,12 @@ export class World<I> {
         return this;
     }
 
+    /**
+     * Executes a single step of all systems managed by the specified scheduler
+     *
+     * @param {Scheduler<I>} scheduler Scheduler governing the systems to execute
+     * @return {Promise<void>} A promise that resolves when all systems in the step have executed
+     */
     public async step(scheduler: Scheduler<I>): Promise<void> {
         assertExists(scheduler);
 
@@ -90,6 +136,11 @@ export class World<I> {
         }
     }
 
+    /**
+     * Advances the scheduler to the next available system in the sequence
+     *
+     * Throws an error if no systems are available to run
+     */
     public advance() {
         if (this._systems.length === 0) {
             throw new Error("No systems to run");

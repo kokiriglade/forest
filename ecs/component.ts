@@ -16,7 +16,8 @@ export abstract class Component<I> implements Identifiable<I> {
  * @param args The arguments to pass to the constructor
  * @template T The component type
  */
-export type ComponentConstructor<I, T extends Component<I> = Component<I>> =
-    new (
-        ...args: never[]
-    ) => T;
+// deno-lint-ignore no-explicit-any
+export type ComponentConstructor<T extends Component<any>> = new (
+    // deno-lint-ignore no-explicit-any
+    ...args: any[]
+) => T;
