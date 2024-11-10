@@ -62,3 +62,4 @@ export * from "./world.ts";
 export * from "./table_result.ts";
 export * from "./identifiable.ts";
 export * from "./table.ts";
+export * from "./hook.ts";
