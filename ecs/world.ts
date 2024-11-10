@@ -4,6 +4,7 @@ import type { Scheduler } from "./scheduler.ts";
 import type { System } from "./system.ts";
 import { Table } from "./table.ts";
 import { assertExists } from "@std/assert";
+import { Hook } from "./hook.ts";
 
 type SystemWrapper<I> = {
     scheduler: Scheduler<I>;
@@ -25,6 +26,8 @@ export class World<I> {
      * Collection of systems and their associated schedulers
      */
     private _systems: SystemWrapper<I>[] = [];
+
+    private _hooks: Hook<I>[] = [];
 
     /**
      * ID of the most recently added entity Used to auto-generate entity IDs
@@ -50,8 +53,17 @@ export class World<I> {
      *
      * @return the systems
      */
-    public get systems(): SystemWrapper<I>[] {
-        return this._systems;
+    public get systems(): Readonly<SystemWrapper<I>[]> {
+        return Object.freeze(this._systems);
+    }
+
+    /**
+     * Returns the lifecycle hooks
+     *
+     * @return the lifecycle hooks
+     */
+    public get hooks(): Readonly<Hook<I>[]> {
+        return Object.freeze(this._hooks);
     }
 
     /**
@@ -115,13 +127,30 @@ export class World<I> {
     }
 
     /**
+     * Adds a lifecycle hook to the world
+     *
+     * @param {Hook<I>} hook The hook to add
+     * @return {this} Returns the `World` instance for chaining
+     */
+    public addHook(hook: Hook<I>): this {
+        this._hooks.push(hook);
+
+        return this;
+    }
+
+    /**
      * Executes a single step of all systems managed by the specified scheduler
      *
      * @param {Scheduler<I>} scheduler Scheduler governing the systems to execute
-     * @return {Promise<void>} A promise that resolves when all systems in the step have executed
      */
     public step(scheduler: Scheduler<I>) {
         assertExists(scheduler);
+
+        for (const hook of this._hooks) {
+            if (hook.onPreTick) {
+                hook.onPreTick();
+            }
+        }
 
         const matchingSystems = this._systems.filter((wrapper) =>
             wrapper.scheduler === scheduler
@@ -134,11 +163,29 @@ export class World<I> {
                 continue;
             }
 
+            for (const hook of this._hooks) {
+                if (hook.onPreSystemUpdate) {
+                    hook.onPreSystemUpdate(systemWrapper.system, results);
+                }
+            }
+
             for (const result of results) {
                 systemWrapper.system.update(
                     result.entity,
                     result.components,
                 );
+            }
+
+            for (const hook of this._hooks) {
+                if (hook.onPostSystemUpdate) {
+                    hook.onPostSystemUpdate(systemWrapper.system, results);
+                }
+            }
+        }
+
+        for (const hook of this._hooks) {
+            if (hook.onPostTick) {
+                hook.onPostTick();
             }
         }
     }
