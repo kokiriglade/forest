@@ -5,6 +5,11 @@ import type { System } from "./system.ts";
 import { Table } from "./table.ts";
 import { assertExists } from "@std/assert";
 
+type SystemWrapper<I> = {
+    scheduler: Scheduler<I>;
+    system: System<I, Component<I>[]>;
+};
+
 /**
  * Manages entities, systems, and their lifecycle
  *
@@ -19,10 +24,7 @@ export class World<I> {
     /**
      * Collection of systems and their associated schedulers
      */
-    private _systems: {
-        scheduler: Scheduler<I>;
-        system: System<I, Component<I>[]>;
-    }[] = [];
+    private _systems: SystemWrapper<I>[] = [];
 
     /**
      * ID of the most recently added entity Used to auto-generate entity IDs
@@ -48,7 +50,7 @@ export class World<I> {
      *
      * @return the systems
      */
-    public get systems() {
+    public get systems(): SystemWrapper<I>[] {
         return this._systems;
     }
 
