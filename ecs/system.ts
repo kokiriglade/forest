@@ -33,7 +33,6 @@ export abstract class System<I, T extends Component<I>[]> {
      *
      * @param {Entity} entity The entity to update
      * @param {T} components Array of components associated with the entity
-     * @return {void | Promise<void>} Optionally returns a promise for asynchronous updates
      */
-    abstract update(entity: Entity, components: T): void | Promise<void>;
+    abstract update(entity: Entity, components: T): void;
 }

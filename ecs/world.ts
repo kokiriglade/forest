@@ -44,6 +44,15 @@ export class World<I> {
     }
 
     /**
+     * Returns the systems within the world
+     *
+     * @return the systems
+     */
+    public get systems() {
+        return this._systems;
+    }
+
+    /**
      * Returns the scheduler currently running or `None` if none is active
      *
      * @return {Option<Scheduler<I>>} Option-wrapped scheduler currently in control
@@ -109,7 +118,7 @@ export class World<I> {
      * @param {Scheduler<I>} scheduler Scheduler governing the systems to execute
      * @return {Promise<void>} A promise that resolves when all systems in the step have executed
      */
-    public async step(scheduler: Scheduler<I>): Promise<void> {
+    public step(scheduler: Scheduler<I>) {
         assertExists(scheduler);
 
         const matchingSystems = this._systems.filter((wrapper) =>
@@ -124,14 +133,10 @@ export class World<I> {
             }
 
             for (const result of results) {
-                const res = systemWrapper.system.update(
+                systemWrapper.system.update(
                     result.entity,
                     result.components,
                 );
-
-                if (res instanceof Promise) {
-                    await res;
-                }
             }
         }
     }
@@ -159,5 +164,28 @@ export class World<I> {
                 schedulers.indexOf(this._currentlyRunningScheduler) + 1
             ] ?? null;
         }
+    }
+
+    /**
+     * Tick the world once
+     *
+     * @returns {boolean} `false` if there are no more schedulers to run
+     */
+    public tick(): boolean {
+        this.advance();
+
+        if (this.currentScheduler.isNone) {
+            return false;
+        }
+
+        const scheduler: Scheduler<I> = this.currentScheduler.unwrap();
+
+        if (scheduler.shouldRun()) {
+            this.step(scheduler);
+        } else {
+            this.advance();
+        }
+
+        return true;
     }
 }
