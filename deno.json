@@ -28,7 +28,6 @@
     "workspace": [
         "./key",
         "./registry",
-        "./primitives",
-        "./ecs"
+        "./primitives"
     ]
 }
