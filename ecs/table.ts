@@ -14,6 +14,10 @@ export class Table<I> {
         new Map();
     private _componentIndex: Map<ComponentConstructor<any>, Set<Entity>> =
         new Map();
+    private _componentEntityMap: Map<
+        ComponentConstructor<any>,
+        Map<Entity, Component<I>>
+    > = new Map();
 
     /**
      * Adds a component to the specified entity's component set
@@ -43,6 +47,11 @@ export class Table<I> {
             this._componentIndex.set(componentType, new Set());
         }
         this._componentIndex.get(componentType)!.add(entity);
+
+        if (!this._componentEntityMap.has(componentType)) {
+            this._componentEntityMap.set(componentType, new Map());
+        }
+        this._componentEntityMap.get(componentType)!.set(entity, component);
     }
 
     /**
@@ -76,6 +85,11 @@ export class Table<I> {
                 this._componentIndex.set(componentType, new Set());
             }
             this._componentIndex.get(componentType)!.add(entity);
+
+            if (!this._componentEntityMap.has(componentType)) {
+                this._componentEntityMap.set(componentType, new Map());
+            }
+            this._componentEntityMap.get(componentType)!.set(entity, component);
         }
     }
 
@@ -174,36 +188,52 @@ export class Table<I> {
             return [];
         }
 
-        // get sets of entities for each required component
+        // Get sets of entities for each required component
         const entitySets = requiredComponents.map((component) => {
             return this._componentIndex.get(component) || new Set<Entity>();
         });
 
-        // find the intersection of all entity sets
-        let resultEntities = entitySets[0];
-        for (let i = 1; i < entitySets.length; i++) {
-            resultEntities = new Set(
-                [...resultEntities!].filter((entity) =>
-                    entitySets[i]!.has(entity)
-                ),
-            );
-
-            if (resultEntities.size === 0) {
-                return [];
-            }
+        // Find the intersection of all entity sets
+        const resultEntities = this.intersectSets(entitySets);
+        if (resultEntities.size === 0) {
+            return [];
         }
 
-        // retrieve the matching components for each entity
+        // Retrieve the matching components for each entity using _componentEntityMap
         const results: TableResult<I, T>[] = [];
-        for (const entity of resultEntities!) {
-            const componentsMap = this._table.get(entity)!;
-            const components = requiredComponents.map(
-                (component) => componentsMap.get(component) as T[number],
-            ) as T;
+        for (const entity of resultEntities) {
+            const components = requiredComponents.map((component) => {
+                return this._componentEntityMap.get(component)!.get(
+                    entity,
+                )! as T[number];
+            }) as T;
             results.push({ entity, components });
         }
 
         return results;
+    }
+
+    private intersectSets(sets: Set<Entity>[]): Set<Entity> {
+        if (sets.length === 0) {
+            return new Set<Entity>();
+        }
+
+        // Sort sets to start with the smallest
+        sets.sort((a, b) => a.size - b.size);
+
+        const result = new Set<Entity>(sets[0]);
+        for (let i = 1; i < sets.length; i++) {
+            const set = sets[i];
+            for (const entity of result) {
+                if (set && !set.has(entity)) {
+                    result.delete(entity);
+                }
+            }
+            if (result.size === 0) {
+                break;
+            }
+        }
+        return result;
     }
 
     /**
@@ -220,6 +250,16 @@ export class Table<I> {
                     entities.delete(entity);
                     if (entities.size === 0) {
                         this._componentIndex.delete(componentType);
+                    }
+                }
+
+                const componentEntityMap = this._componentEntityMap.get(
+                    componentType,
+                );
+                if (componentEntityMap) {
+                    componentEntityMap.delete(entity);
+                    if (componentEntityMap.size === 0) {
+                        this._componentEntityMap.delete(componentType);
                     }
                 }
             }
