@@ -4,7 +4,7 @@ import type { Scheduler } from "./scheduler.ts";
 import type { System } from "./system.ts";
 import { Table } from "./table.ts";
 import { assertExists } from "@std/assert";
-import { Hook } from "./hook.ts";
+import type { Hook } from "./hook.ts";
 
 type SystemWrapper<I> = {
     scheduler: Scheduler<I>;

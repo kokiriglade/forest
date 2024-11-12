@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "lib": ["deno.ns", "dom", "ESNext"],
         "strict": true,
         "exactOptionalPropertyTypes": true,
         "useUnknownInCatchVariables": true,
